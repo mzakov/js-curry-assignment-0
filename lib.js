@@ -29,8 +29,15 @@ const cart =
 const itemRepeater =
   itemName =>
     count => {
-      // TODO
+      let repeat = []
+      for (let i = 0; i < count; i++) repeat.push(itemName)
+      return repeat
     }
+
+const flatmap =
+  mapper =>
+    (total, param) =>
+      [...total, ...mapper(param)]
 
 /**
  * should return an array of carts with each given customer's shopping list
@@ -39,7 +46,13 @@ const itemRepeater =
 const constructCarts =
   listings =>
     customers => {
-      // TODO
+      return customers
+        .map(cust => cart(cust.name, ...entries(cust.shoppingList)
+          .reduce(flatmap(item => itemRepeater(item[0])(item[1])), [])
+            .reduce(flatmap(item => listings
+              .filter(list => list.name === item)), [])
+        )
+      )
     }
 
 module.exports = {
